@@ -23,12 +23,22 @@ class CodeManager implements CodeManagerInterface
      */
     private $codeLibraryRepo;
     
+    /**
+     * 
+     * @var CodeLibraryLogManagerInterface
+     */
+    private $codeLibraryLogManager;
+    
     private $numberLength = 4;
     
-    public function __construct(CodeBuilderInterface $codeBuilder, CodeLibraryRepositoryInterface $codeLibraryRepo) 
+    public function __construct(
+            CodeBuilderInterface $codeBuilder, 
+            CodeLibraryRepositoryInterface $codeLibraryRepo,
+            CodeLibraryLogManagerInterface $codeLibraryLogManager) 
     {
         $this->codeBuilder = $codeBuilder;
         $this->codeLibraryRepo = $codeLibraryRepo;
+        $this->codeLibraryLogManager = $codeLibraryLogManager;
     }
     
     public function generate(CodeLibraryClientInterface $client): CodeLibraryClientInterface 
@@ -49,7 +59,7 @@ class CodeManager implements CodeManagerInterface
         
         $this->updateCodeLibrary($codeLibrary, $number, $completeCode);
         
-        $this->saveLog($client, $codeLibrary);
+        $this->codeLibraryLogManager->createLog($client);
         
         return $client;
     }
@@ -61,11 +71,6 @@ class CodeManager implements CodeManagerInterface
                 ->setLastUsed(new \DateTime());
         
         $this->codeLibraryRepo->save($codeLibrary);
-    }
-    
-    protected function saveLog(CodeLibraryClientInterface $client, CodeLibraryInterface $codeLibrary):void
-    {
-        
     }
     
     protected function generateNumber(int $lastSequence):string
