@@ -14,7 +14,7 @@ class CodeBuilder implements CodeBuilderInterface
     public function generate(string $format, CodeLibraryClientInterface $client, string $separator = CodeLibraryInterface::SEPARATOR_MINUS): string 
     {
         $resultSets = [];
-        $library = $client->getLibrary();
+        $library = array_merge($this->getLibrary(), $client->getLibrary());
         foreach($this->separateFormat($format, $separator) as $value) {
             $process = preg_match('/^{/', $value) and preg_match('/}/', $value);
             if(!$process) {
@@ -38,4 +38,15 @@ class CodeBuilder implements CodeBuilderInterface
         return explode($separator, $format);
     }
 
+    protected function getLibrary():array
+    {
+        return [
+            'DD' => date("D"),
+            'MM' => date("M"),
+            'dd' => date('d'),
+            'mm' => date('m'),
+            'yy' => date('y'),
+            'yyyy' => date('Y')
+        ];
+    }
 }

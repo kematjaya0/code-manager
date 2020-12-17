@@ -28,9 +28,7 @@ class ClientTest implements CodeLibraryClientInterface
     public function getLibrary(): array 
     {
         return [
-            'DD' => date("D"),
-            'MM' => date("M"),
-            'YY' => date("Y"),
+            'test' => 'test'
         ];
     }
 
