@@ -15,14 +15,14 @@ class CodeBuilder implements CodeBuilderInterface
     {
         $resultSets = [];
         $library = $client->getLibrary();
-        foreach($this->separateFormat($format, $separator) as $value) {
+        foreach ($this->separateFormat($format, $separator) as $value) {
             $process = preg_match('/^{/', $value) and preg_match('/}/', $value);
-            if(!$process) {
+            if (!$process) {
                 continue;
             }
             
             $val = str_replace('}', '', str_replace('{', '', $value));
-            if(isset($library[$val])) {
+            if (isset($library[$val])) {
                 $resultSets[] = $library[$val];
                 continue;
             }

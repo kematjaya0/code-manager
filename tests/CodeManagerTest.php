@@ -3,6 +3,7 @@
 namespace Kematjaya\CodeManager\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Kematjaya\CodeManager\Exception\CodeLibraryNotFoundException;
 use Kematjaya\CodeManager\Tests\Model\ClientTest;
 use Kematjaya\CodeManager\Tests\Model\CodeLibraryTest;
 use Kematjaya\CodeManager\Tests\Model\CodeLibraryLogTest;
@@ -31,7 +32,7 @@ class CodeManagerTest extends TestCase
         
         $manager = new CodeManager($builder, $repo, $logManager);
         
-        $this->expectException(\Exception::class);
+        $this->expectException(CodeLibraryNotFoundException::class);
         $manager->generate($client);
     }
     
@@ -61,8 +62,14 @@ class CodeManagerTest extends TestCase
         
         $manager = new CodeManager($builder, $repo, $logManager);
         
-        $this->assertEquals('0001/Thu/Dec/2020', $manager->generate($client)->getGeneratedCode());
-        $this->assertEquals('0002/Thu/Dec/2020', $manager->generate($client)->getGeneratedCode());
+        $arr = [
+            ['0001', date('D'), date('M'), date('Y')],
+            ['0002', date('D'), date('M'), date('Y')]
+        ];
+        foreach ($arr as $v) {
+            $code = implode('/', $v);
+            $this->assertEquals($code, $manager->generate($client)->getGeneratedCode());
+        }
         
     }
 }
