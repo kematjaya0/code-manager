@@ -78,18 +78,27 @@ class CodeManagerTest extends TestCase
      */
     public function testGenerateResetSuccess(CodeLibraryLogManagerInterface $logManager)
     {
-        $client = new ClientTest();
-        $library = new CodeLibraryResetTest();
+        $client = (new ClientTest())->setTest('aa');
+        $library = (new CodeLibraryResetTest())->setResetKey('{test}');
         $builder = new CodeBuilder();
         $repo = $this->createConfiguredMock(CodeLibraryRepositoryInterface::class, [
             'findOneByClient' => $library
         ]);
         
         $manager = new CodeManager($builder, $repo, $logManager);
-        
         $arr = [
-            ['0001', date('D'), date('M'), date('Y')],
-            ['0002', date('D'), date('M'), date('Y')]
+            ['0001', date('D'), date('M'), date('Y'), $client->getTest()],
+            ['0002', date('D'), date('M'), date('Y'), $client->getTest()]
+        ];
+        foreach ($arr as $v) {
+            $code = implode('/', $v);
+            $this->assertEquals($code, $manager->generate($client)->getGeneratedCode());
+        }
+        
+        $client->setTest('b');
+        $arr = [
+            ['0001', date('D'), date('M'), date('Y'), $client->getTest()],
+            ['0002', date('D'), date('M'), date('Y'), $client->getTest()]
         ];
         foreach ($arr as $v) {
             $code = implode('/', $v);

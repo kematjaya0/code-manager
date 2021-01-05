@@ -18,7 +18,7 @@ class CodeBuilderTest extends TestCase
         $builder = new CodeBuilder();
         
         $result = [
-            '{number}', date('D'), date('M'), date('y')
+            '{number}', date('D'), date('M'), date('Y')
         ];
         
         $this->assertEquals(implode('-', $result), $builder->generate('{number}-{DD}-{MM}-{YYYY}', $client));

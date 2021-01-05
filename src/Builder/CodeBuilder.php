@@ -21,7 +21,7 @@ class CodeBuilder extends AbstractCodeBuilder
                 continue;
             }
             
-            $val = str_replace(self::BRACE_END, '', str_replace(self::BRACE_START, '', $value));
+            $val = $this->getFormatValue($value);
             if (isset($library[$val])) {
                 $resultSets[] = $library[$val];
                 continue;
@@ -33,9 +33,9 @@ class CodeBuilder extends AbstractCodeBuilder
         return implode($separator, $resultSets);
     }
 
-    protected function getLibrary():array
+    public function getLibrary():array
     {
-        return [
+        $arr = [
             'DD' => date("D"),
             'MM' => date("M"),
             'dd' => date('d'),
@@ -43,5 +43,7 @@ class CodeBuilder extends AbstractCodeBuilder
             'yy' => date('y'),
             'yyyy' => date('Y')
         ];
+        
+        return array_merge($arr, parent::getLibrary());
     }
 }

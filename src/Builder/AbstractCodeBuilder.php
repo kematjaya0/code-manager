@@ -29,8 +29,17 @@ abstract class AbstractCodeBuilder implements CodeBuilderInterface
             'DD' => date("D"),
             'MM' => date("M"),
             'YYYY' => date("Y"),
-            'YY' => date('y')
+            'YY' => date('y'),
+            'HH' => date('H'),
+            'ii' => date('i'),
+            'ss' => date('s'),
+            'rand' => rand()
         ];
+    }
+    
+    public function getFormatValue(string $format):?string
+    {
+        return str_replace(self::BRACE_END, '', str_replace(self::BRACE_START, '', $format));
     }
     
     public function isSupported(string $value):bool

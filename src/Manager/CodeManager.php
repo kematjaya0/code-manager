@@ -56,7 +56,7 @@ class CodeManager implements CodeManagerInterface
         }
         
         if ($codeLibrary instanceof CodeLibraryResetInterface) {
-            $this->resetCodeLibrary($codeLibrary);
+            $this->resetCodeLibrary($client, $codeLibrary);
         }
         
         $lastSequence = $codeLibrary->getLastSequence() ? $codeLibrary->getLastSequence() : 0;
@@ -72,7 +72,7 @@ class CodeManager implements CodeManagerInterface
         return $client;
     }
     
-    protected function resetCodeLibrary(CodeLibraryResetInterface $codeLibrary): CodeLibraryResetInterface
+    protected function resetCodeLibrary(CodeLibraryClientInterface $client, CodeLibraryResetInterface $codeLibrary): CodeLibraryResetInterface
     {
         if (null === $codeLibrary->getResetKey()) {
             return $codeLibrary;
@@ -91,11 +91,24 @@ class CodeManager implements CodeManagerInterface
             return $codeLibrary;
         }
          
-        $library = $this->codeBuilder->getLibrary();
+        $library = array_merge($this->codeBuilder->getLibrary(), $client->getLibrary());
         $lastCodes = explode($codeLibrary->getSeparator(), $codeLibrary->getLastCode());
-        $key = array_keys(explode($codeLibrary->getSeparator(), $codeLibrary->getFormat()));
-        dump($key);
-        exit;
+        $formats = array_flip(explode($codeLibrary->getSeparator(), $codeLibrary->getFormat()));
+        $key = isset($formats[$codeLibrary->getResetKey()]) ? $formats[$codeLibrary->getResetKey()] : null;
+        if (!$key) {
+            throw new \Exception(sprintf('key not found: %s', $codeLibrary->getResetKey()));
+        }
+        
+        $lastValue = $lastCodes[$key];
+        $actualValue = $library[$this->codeBuilder->getFormatValue($codeLibrary->getResetKey())];
+        //dump($library);
+        if ($lastValue === $actualValue) {
+            
+            return $codeLibrary;
+        }
+        
+        $codeLibrary->setLastSequence(0);
+        
         return $codeLibrary;
     }
     

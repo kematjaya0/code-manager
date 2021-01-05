@@ -15,6 +15,8 @@ class ClientTest implements CodeLibraryClientInterface
      */
     private $code;
     
+    private $test;
+    
     public function getClassId(): ?string 
     {
         return rand(1, 10);
@@ -25,10 +27,22 @@ class ClientTest implements CodeLibraryClientInterface
         return $this->code;
     }
 
+    public function getTest():?string
+    {
+        return $this->test;
+    }
+    
+    public function setTest(string $test):self
+    {
+        $this->test = $test;
+        
+        return $this;
+    }
+    
     public function getLibrary(): array 
     {
         return [
-            'test' => 'test'
+            'test' => $this->getTest()
         ];
     }
 

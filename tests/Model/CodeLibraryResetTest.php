@@ -18,10 +18,31 @@ use Kematjaya\CodeManager\Entity\CodeLibraryResetInterface;
  */
 class CodeLibraryResetTest extends CodeLibraryTest implements CodeLibraryResetInterface
 {
-    //put your code here
+    /**
+     * 
+     * @var string
+     */
+    private $resetKey;
+    
     public function getResetKey(): ?string 
     {
-        return '{MM}';
+        return $this->resetKey;
     }
 
+    public function setResetKey(string $resetKey):self
+    {
+        $this->resetKey = $resetKey;
+        
+        return $this;
+    }
+    
+    public function getFormat():?string
+    {
+        $arr = [
+            '{number}', '{DD}', '{MM}', '{YYYY}', '{test}'
+        ];
+        
+        return implode($this->getSeparator(), $arr);
+    }
+    
 }
