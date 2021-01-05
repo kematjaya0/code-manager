@@ -9,5 +9,23 @@ use Kematjaya\CodeManager\Entity\CodeLibraryInterface;
  */
 interface CodeBuilderInterface 
 {
+    
+    const BRACE_START = '{';
+    const BRACE_END = '}';
+    /**
+     * Generate code by format
+     *  
+     * @param string $format
+     * @param CodeLibraryClientInterface $client
+     * @param string $separator
+     * @return string
+     */
     public function generate(string $format, CodeLibraryClientInterface $client, string $separator = CodeLibraryInterface::SEPARATOR_MINUS):string;
+    
+    /**
+     * Library of code
+     * 
+     * @return array
+     */
+    public function getLibrary():array;
 }

@@ -30,7 +30,7 @@ class CodeLibraryTest implements CodeLibraryInterface
     public function getFormat():?string
     {
         $arr = [
-            '{number}', '{DD}', '{MM}', '{yyyy}'
+            '{number}', '{DD}', '{MM}', '{YYYY}'
         ];
         
         return implode($this->getSeparator(), $arr);
