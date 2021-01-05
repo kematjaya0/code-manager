@@ -21,7 +21,7 @@ class CodeBuilderTest extends TestCase
             '{number}', date('D'), date('M'), date('Y')
         ];
         
-        $this->assertEquals(implode('-', $result), $builder->generate('{number}-{DD}-{MM}-{YY}', $client));
-        $this->assertEquals(implode(CodeLibraryInterface::SEPARATOR_SLASH, $result), $builder->generate('{number}/{DD}/{MM}/{YY}', $client, CodeLibraryInterface::SEPARATOR_SLASH));
+        $this->assertEquals(implode('-', $result), $builder->generate('{number}-{DD}-{MM}-{YYYY}', $client));
+        $this->assertEquals(implode(CodeLibraryInterface::SEPARATOR_SLASH, $result), $builder->generate('{number}/{DD}/{MM}/{YYYY}', $client, CodeLibraryInterface::SEPARATOR_SLASH));
     }
 }

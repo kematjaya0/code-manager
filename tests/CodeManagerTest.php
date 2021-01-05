@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Kematjaya\CodeManager\Exception\CodeLibraryNotFoundException;
 use Kematjaya\CodeManager\Tests\Model\ClientTest;
 use Kematjaya\CodeManager\Tests\Model\CodeLibraryTest;
+use Kematjaya\CodeManager\Tests\Model\CodeLibraryResetTest;
 use Kematjaya\CodeManager\Tests\Model\CodeLibraryLogTest;
 use Kematjaya\CodeManager\Builder\CodeBuilder;
 use Kematjaya\CodeManager\Manager\CodeManager;
@@ -70,6 +71,29 @@ class CodeManagerTest extends TestCase
             $code = implode('/', $v);
             $this->assertEquals($code, $manager->generate($client)->getGeneratedCode());
         }
+    }
+    
+    /**
+     * @depends testInstanceManagerLog
+     */
+    public function testGenerateResetSuccess(CodeLibraryLogManagerInterface $logManager)
+    {
+        $client = new ClientTest();
+        $library = new CodeLibraryResetTest();
+        $builder = new CodeBuilder();
+        $repo = $this->createConfiguredMock(CodeLibraryRepositoryInterface::class, [
+            'findOneByClient' => $library
+        ]);
         
+        $manager = new CodeManager($builder, $repo, $logManager);
+        
+        $arr = [
+            ['0001', date('D'), date('M'), date('Y')],
+            ['0002', date('D'), date('M'), date('Y')]
+        ];
+        foreach ($arr as $v) {
+            $code = implode('/', $v);
+            $this->assertEquals($code, $manager->generate($client)->getGeneratedCode());
+        }
     }
 }
