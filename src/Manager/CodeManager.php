@@ -92,7 +92,7 @@ class CodeManager implements CodeManagerInterface
         }
          
         $library = array_merge($this->codeBuilder->getLibrary(), $client->getLibrary());
-        $lastCodes = explode($codeLibrary->getSeparator(), $codeLibrary->getLastCode());
+        $lastCodes = $this->explode($codeLibrary);
         $formats = array_flip(explode($codeLibrary->getSeparator(), $codeLibrary->getFormat()));
         $key = isset($formats[$codeLibrary->getResetKey()]) ? $formats[$codeLibrary->getResetKey()] : null;
         if (!$key) {
@@ -110,6 +110,30 @@ class CodeManager implements CodeManagerInterface
         $codeLibrary->setLastSequence(0);
         
         return $codeLibrary;
+    }
+    
+    /**
+     * Explode by separator
+     * @param CodeLibraryInterface $codeLibrary
+     * @return array
+     */
+    protected function explode(CodeLibraryInterface $codeLibrary):array
+    {
+        $lastCodes = explode($codeLibrary->getSeparator(), $codeLibrary->getLastCode());
+        if (count($lastCodes)>1) {
+            
+            return $lastCodes;
+        }
+        
+        foreach ([CodeLibraryInterface::SEPARATOR_BACKSLASH, CodeLibraryInterface::SEPARATOR_MINUS, CodeLibraryInterface::SEPARATOR_SLASH] as $separator) {
+            $lastCodes = explode($separator, $codeLibrary->getLastCode());
+            if (count($lastCodes)>1) {
+
+                return $lastCodes;
+            }
+        }
+        
+        return [];
     }
     
     /**
@@ -147,5 +171,5 @@ class CodeManager implements CodeManagerInterface
         
         return implode('', $numbers);
     }
-
+    
 }
