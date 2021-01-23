@@ -19,7 +19,7 @@ interface CodeLibraryInterface
     
     public function setLastUsed(\DateTimeInterface $lastUsed):self;
     
-    public function getLastUsed():\DateTimeInterface;
+    public function getLastUsed():?\DateTimeInterface;
     
     public function setLastSequence(int $number):self;
     
