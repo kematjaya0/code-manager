@@ -10,6 +10,7 @@ interface CodeLibraryInterface
     const SEPARATOR_SLASH = '/';
     const SEPARATOR_BACKSLASH = '\\';
     const SEPARATOR_MINUS = '-';
+    const SEPARATOR_DOT = '.';
     
     public function getFormat():?string;
     
