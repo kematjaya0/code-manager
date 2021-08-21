@@ -59,7 +59,7 @@ class CodeManager implements CodeManagerInterface
         
         $lastSequence = $codeLibrary->getLastSequence() ? $codeLibrary->getLastSequence() : 0;
         $code = $this->codeBuilder->generate($codeLibrary->getFormat(), $client, $codeLibrary->getSeparator());
-        $number = $this->generateNumber($lastSequence, $codeLibrary->getLength());
+        $number = $this->generateNumber($lastSequence, null !== $codeLibrary->getLength() ? $codeLibrary->getLength() : 4);
         
         $completeCode = str_replace(self::REGEX_NUMBER, $number, $code);
         
