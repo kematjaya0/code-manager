@@ -29,4 +29,6 @@ interface CodeLibraryInterface
     public function setLastCode(string $code):self;
     
     public function getLastCode():?string;
+    
+    public function getLength():?int;
 }

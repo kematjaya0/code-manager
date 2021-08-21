@@ -82,4 +82,9 @@ class CodeLibraryTest implements CodeLibraryInterface
         return self::SEPARATOR_SLASH;
     }
 
+    public function getLength(): ?int 
+    {
+        return 4;
+    }
+
 }

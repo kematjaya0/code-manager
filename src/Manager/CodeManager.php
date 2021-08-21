@@ -46,7 +46,7 @@ class CodeManager implements CodeManagerInterface
      * @return CodeLibraryClientInterface
      * @throws \Exception
      */
-    public function generate(CodeLibraryClientInterface $client, int $length = 4): CodeLibraryClientInterface 
+    public function generate(CodeLibraryClientInterface $client): CodeLibraryClientInterface 
     {
         $codeLibrary = $this->codeLibraryRepo->findOneByClient($client);
         if (!$codeLibrary) {
@@ -59,7 +59,7 @@ class CodeManager implements CodeManagerInterface
         
         $lastSequence = $codeLibrary->getLastSequence() ? $codeLibrary->getLastSequence() : 0;
         $code = $this->codeBuilder->generate($codeLibrary->getFormat(), $client, $codeLibrary->getSeparator());
-        $number = $this->generateNumber($lastSequence, $length);
+        $number = $this->generateNumber($lastSequence, $codeLibrary->getLength());
         
         $completeCode = str_replace(self::REGEX_NUMBER, $number, $code);
         
