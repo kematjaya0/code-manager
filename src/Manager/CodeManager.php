@@ -32,8 +32,6 @@ class CodeManager implements CodeManagerInterface
      */
     private $codeLibraryLogManager;
     
-    private $numberLength = 4;
-    
     public function __construct(AbstractCodeBuilder $codeBuilder, CodeLibraryRepositoryInterface $codeLibraryRepo, CodeLibraryLogManagerInterface $codeLibraryLogManager) 
     {
         $this->codeBuilder = $codeBuilder;
@@ -48,7 +46,7 @@ class CodeManager implements CodeManagerInterface
      * @return CodeLibraryClientInterface
      * @throws \Exception
      */
-    public function generate(CodeLibraryClientInterface $client): CodeLibraryClientInterface 
+    public function generate(CodeLibraryClientInterface $client, int $length = 4): CodeLibraryClientInterface 
     {
         $codeLibrary = $this->codeLibraryRepo->findOneByClient($client);
         if (!$codeLibrary) {
@@ -61,7 +59,7 @@ class CodeManager implements CodeManagerInterface
         
         $lastSequence = $codeLibrary->getLastSequence() ? $codeLibrary->getLastSequence() : 0;
         $code = $this->codeBuilder->generate($codeLibrary->getFormat(), $client, $codeLibrary->getSeparator());
-        $number = $this->generateNumber($lastSequence);
+        $number = $this->generateNumber($lastSequence, $length);
         
         $completeCode = str_replace(self::REGEX_NUMBER, $number, $code);
         
@@ -159,11 +157,11 @@ class CodeManager implements CodeManagerInterface
      * @param int $lastSequence
      * @return string
      */
-    protected function generateNumber(int $lastSequence):string
+    protected function generateNumber(int $lastSequence, int $length):string
     {
         $number = $lastSequence + 1;
         $numbers = [];
-        for ($i = 0; $i < ($this->numberLength - strlen($number)); $i++) {
+        for ($i = 0; $i < ($length - strlen($number)); $i++) {
             $numbers[] = 0;
         }
         

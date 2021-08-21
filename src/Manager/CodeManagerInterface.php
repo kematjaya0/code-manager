@@ -11,5 +11,5 @@ interface CodeManagerInterface
 {
     const REGEX_NUMBER = '{number}';
     
-    public function generate(CodeLibraryClientInterface $client): CodeLibraryClientInterface;
+    public function generate(CodeLibraryClientInterface $client, int $length = 4): CodeLibraryClientInterface;
 }
