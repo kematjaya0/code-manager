@@ -18,6 +18,7 @@ class CodeBuilder extends AbstractCodeBuilder
         foreach ($this->separateFormat($format, $separator) as $value) {
             $process = $this->isSupported($value);
             if (!$process) {
+                $resultSets[] = $value;
                 continue;
             }
             
