@@ -25,9 +25,9 @@ class CodeLibraryLogManager implements CodeLibraryLogManagerInterface
     {
         $object = $this->codeLibraryLogRepo->createLog();
         $object->setClassName(get_class($client))
-                ->setClassId($client->getClassId())
+                ->setClassId((string) $client->getClassId())
                 ->setCreatedAt(new \DateTime())
-                ->setGeneratedCode($client->getGeneratedCode());
+                ->setGeneratedCode((string) $client->getGeneratedCode());
         
         $this->codeLibraryLogRepo->save($object);
         

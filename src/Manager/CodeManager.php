@@ -58,8 +58,8 @@ class CodeManager implements CodeManagerInterface
         }
         
         $lastSequence = $codeLibrary->getLastSequence() ? $codeLibrary->getLastSequence() : 0;
-        $code = $this->codeBuilder->generate($codeLibrary->getFormat(), $client, $codeLibrary->getSeparator());
-        $number = $this->generateNumber($lastSequence, null !== $codeLibrary->getLength() ? $codeLibrary->getLength() : 4);
+        $code = $this->codeBuilder->generate((string) $codeLibrary->getFormat(), $client, $this->getSeparator($codeLibrary));
+        $number = $this->generateNumber($lastSequence, $codeLibrary->getLength() ?: 4);
         
         $completeCode = str_replace(self::REGEX_NUMBER, $number, $code);
         
@@ -80,7 +80,7 @@ class CodeManager implements CodeManagerInterface
             throw new NotSupportedResetKeyException($codeLibrary);
         }
         
-        $strpos = strpos($codeLibrary->getFormat(), $codeLibrary->getResetKey());
+        $strpos = strpos((string) $codeLibrary->getFormat(), $codeLibrary->getResetKey());
         if (false === $strpos) {
             throw new \Exception(sprintf("format key '%s' not found inside format '%s'", $codeLibrary->getResetKey(), $codeLibrary->getFormat()));
         }
@@ -91,15 +91,21 @@ class CodeManager implements CodeManagerInterface
          
         $library = array_merge($this->codeBuilder->getLibrary(), $client->getLibrary());
         $lastCodes = $this->explode($codeLibrary);
-        $formats = array_flip(explode($codeLibrary->getSeparator(), $codeLibrary->getFormat()));
+        $formats = array_flip(explode($this->getSeparator($codeLibrary), $codeLibrary->getFormat()));
         $key = isset($formats[$codeLibrary->getResetKey()]) ? $formats[$codeLibrary->getResetKey()] : null;
-        if (!$key) {
+        if (null === $key) {
             throw new \Exception(sprintf('key not found: %s', $codeLibrary->getResetKey()));
         }
         
-        $lastValue = $lastCodes[$key];
-        $actualValue = $library[$this->codeBuilder->getFormatValue($codeLibrary->getResetKey())];
-        //dump($library);
+        if (!isset($lastCodes[$key])) {
+            // last code tidak bisa dibandingkan dengan format (mis. format berubah), sequence dilanjutkan
+            return $codeLibrary;
+        }
+        
+        $libraryKey = $this->codeBuilder->getFormatValue($codeLibrary->getResetKey());
+        $lastValue = (string) $lastCodes[$key];
+        // key yang tidak ada di library ditulis apa adanya oleh builder
+        $actualValue = array_key_exists($libraryKey, $library) ? (string) $library[$libraryKey] : $codeLibrary->getResetKey();
         if ($lastValue === $actualValue) {
             
             return $codeLibrary;
@@ -117,13 +123,13 @@ class CodeManager implements CodeManagerInterface
      */
     protected function explode(CodeLibraryInterface $codeLibrary):array
     {
-        $lastCodes = explode($codeLibrary->getSeparator(), $codeLibrary->getLastCode());
+        $lastCodes = explode($this->getSeparator($codeLibrary), $codeLibrary->getLastCode());
         if (count($lastCodes)>1) {
             
             return $lastCodes;
         }
         
-        foreach ([CodeLibraryInterface::SEPARATOR_BACKSLASH, CodeLibraryInterface::SEPARATOR_MINUS, CodeLibraryInterface::SEPARATOR_SLASH] as $separator) {
+        foreach ([CodeLibraryInterface::SEPARATOR_BACKSLASH, CodeLibraryInterface::SEPARATOR_MINUS, CodeLibraryInterface::SEPARATOR_SLASH, CodeLibraryInterface::SEPARATOR_DOT] as $separator) {
             $lastCodes = explode($separator, $codeLibrary->getLastCode());
             if (count($lastCodes)>1) {
 
@@ -132,6 +138,19 @@ class CodeManager implements CodeManagerInterface
         }
         
         return [];
+    }
+    
+    /**
+     * Separator of code library, default to minus when not set
+     * 
+     * @param CodeLibraryInterface $codeLibrary
+     * @return string
+     */
+    protected function getSeparator(CodeLibraryInterface $codeLibrary):string
+    {
+        $separator = $codeLibrary->getSeparator();
+        
+        return null === $separator || '' === $separator ? CodeLibraryInterface::SEPARATOR_MINUS : $separator;
     }
     
     /**
@@ -160,14 +179,8 @@ class CodeManager implements CodeManagerInterface
     protected function generateNumber(int $lastSequence, int $length):string
     {
         $number = $lastSequence + 1;
-        $numbers = [];
-        for ($i = 0; $i < ($length - strlen($number)); $i++) {
-            $numbers[] = 0;
-        }
         
-        $numbers[] = $number;
-        
-        return implode('', $numbers);
+        return str_pad((string) $number, $length, '0', STR_PAD_LEFT);
     }
     
 }
