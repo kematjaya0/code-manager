@@ -3,5 +3,5 @@ Branch `6.4`: PHP >= 8.1 (dipakai kematjaya/code-manager-bundle 6.4 untuk Symfon
 
 ## Test
 ```
-sh docker/test.sh all
+sh ../test.sh code-manager all
 ```
