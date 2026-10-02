@@ -16,5 +16,5 @@ namespace Kematjaya\CodeManager\Entity;
  */
 interface CodeLibraryResetInterface extends CodeLibraryInterface
 {
-    public function getResetKey():?string;
+    public function getResetKey(): ?string;
 }

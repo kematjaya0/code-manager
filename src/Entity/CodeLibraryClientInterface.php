@@ -5,13 +5,13 @@ namespace Kematjaya\CodeManager\Entity;
 /**
  * @author Nur Hidayatullah <kematjaya0@gmail.com>
  */
-interface CodeLibraryClientInterface 
+interface CodeLibraryClientInterface
 {
-    public function getClassId():?string;
-    
-    public function getLibrary():array;
-    
-    public function getGeneratedCode():?string;
-    
-    public function setGeneratedCode(string $code):self;
+    public function getClassId(): ?string;
+
+    public function getLibrary(): array;
+
+    public function getGeneratedCode(): ?string;
+
+    public function setGeneratedCode(string $code): self;
 }

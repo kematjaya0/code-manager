@@ -10,27 +10,18 @@ use Kematjaya\CodeManager\Entity\CodeLibraryResetInterface;
  */
 class ConfigurableCodeLibrary implements CodeLibraryResetInterface
 {
-    private $format;
+    private ?\DateTimeInterface $lastUsed = null;
 
-    private $separator;
+    private ?int $lastSequence = null;
 
-    private $length;
+    private ?string $lastCode = null;
 
-    private $resetKey;
-
-    private $lastUsed;
-
-    private $lastSequence;
-
-    private $lastCode;
-
-    public function __construct(string $format, ?string $separator, ?int $length = null, ?string $resetKey = null)
-    {
-        $this->format = $format;
-        $this->separator = $separator;
-        $this->length = $length;
-        $this->resetKey = $resetKey;
-    }
+    public function __construct(
+        private readonly string $format,
+        private readonly ?string $separator,
+        private readonly ?int $length = null,
+        private readonly ?string $resetKey = null,
+    ) {}
 
     public function getFormat(): ?string
     {

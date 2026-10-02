@@ -2,15 +2,16 @@
 
 namespace Kematjaya\CodeManager\Tests\Manager;
 
-use PHPUnit\Framework\TestCase;
-use Kematjaya\CodeManager\Manager\CodeLibraryLogManager;
-use Kematjaya\CodeManager\Repository\CodeLibraryLogRepositoryInterface;
 use Kematjaya\CodeManager\Entity\CodeLibraryClientInterface;
 use Kematjaya\CodeManager\Entity\CodeLibraryLogInterface;
+use Kematjaya\CodeManager\Manager\CodeLibraryLogManager;
+use Kematjaya\CodeManager\Repository\CodeLibraryLogRepositoryInterface;
+use Kematjaya\CodeManager\Tests\Model\CodeLibraryLogTest;
+use PHPUnit\Framework\TestCase;
 
 class CodeLibraryLogManagerTest extends TestCase
 {
-    public function testCreateLog()
+    public function testCreateLog(): void
     {
         $log = $this->createMock(CodeLibraryLogInterface::class);
         $log->expects($this->once())->method('setClassName')->willReturnSelf();
@@ -32,9 +33,9 @@ class CodeLibraryLogManagerTest extends TestCase
         $this->assertSame($log, $result);
     }
 
-    public function testCreateLogWithoutClassId()
+    public function testCreateLogWithoutClassId(): void
     {
-        $log = new \Kematjaya\CodeManager\Tests\Model\CodeLibraryLogTest();
+        $log = new CodeLibraryLogTest();
         $repo = $this->createConfiguredMock(CodeLibraryLogRepositoryInterface::class, ['createLog' => $log]);
         $client = $this->createConfiguredMock(CodeLibraryClientInterface::class, [
             'getClassId' => null,

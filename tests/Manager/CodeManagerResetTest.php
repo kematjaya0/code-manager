@@ -11,6 +11,7 @@ use Kematjaya\CodeManager\Manager\CodeManager;
 use Kematjaya\CodeManager\Repository\CodeLibraryRepositoryInterface;
 use Kematjaya\CodeManager\Tests\Model\ClientTest;
 use Kematjaya\CodeManager\Tests\Model\ConfigurableCodeLibrary;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class CodeManagerResetTest extends TestCase
@@ -18,13 +19,13 @@ class CodeManagerResetTest extends TestCase
     private function createManager(CodeLibraryInterface $library): CodeManager
     {
         $repo = $this->createConfiguredMock(CodeLibraryRepositoryInterface::class, [
-            'findOneByClient' => $library
+            'findOneByClient' => $library,
         ]);
 
         return new CodeManager(new CodeBuilder(), $repo, $this->createMock(CodeLibraryLogManagerInterface::class));
     }
 
-    public function testResetKeyOnFirstPosition()
+    public function testResetKeyOnFirstPosition(): void
     {
         $client = (new ClientTest())->setTest('A');
         $manager = $this->createManager(new ConfigurableCodeLibrary('{test}-{number}', '-', null, '{test}'));
@@ -36,13 +37,13 @@ class CodeManagerResetTest extends TestCase
         $this->assertEquals('B-0001', $manager->generate($client)->getGeneratedCode());
     }
 
-    public function testResetKeyWithNonStringLibraryValue()
+    public function testResetKeyWithNonStringLibraryValue(): void
     {
         $client = $this->createConfiguredMock(CodeLibraryClientInterface::class, [
             'getLibrary' => ['year' => 2024],
         ]);
         $codes = [];
-        $client->method('setGeneratedCode')->willReturnCallback(function (string $code) use ($client, &$codes) {
+        $client->method('setGeneratedCode')->willReturnCallback(function (string $code) use ($client, &$codes): MockObject {
             $codes[] = $code;
 
             return $client;
@@ -56,21 +57,21 @@ class CodeManagerResetTest extends TestCase
         $this->assertEquals(['001/2024', '002/2024'], $codes);
     }
 
-    public function testNullSeparatorDefaultsToMinus()
+    public function testNullSeparatorDefaultsToMinus(): void
     {
         $manager = $this->createManager(new ConfigurableCodeLibrary('INV-{number}', null));
 
         $this->assertEquals('INV-0001', $manager->generate(new ClientTest())->getGeneratedCode());
     }
 
-    public function testCustomLength()
+    public function testCustomLength(): void
     {
         $manager = $this->createManager(new ConfigurableCodeLibrary('{number}.{YYYY}', CodeLibraryInterface::SEPARATOR_DOT, 6));
 
         $this->assertEquals('000001.' . date('Y'), $manager->generate(new ClientTest())->getGeneratedCode());
     }
 
-    public function testNumberLongerThanLength()
+    public function testNumberLongerThanLength(): void
     {
         $library = new ConfigurableCodeLibrary('{number}', '-', 2);
         $library->setLastSequence(99);
@@ -78,7 +79,7 @@ class CodeManagerResetTest extends TestCase
         $this->assertEquals('100', $this->createManager($library)->generate(new ClientTest())->getGeneratedCode());
     }
 
-    public function testUnknownResetKeyDoesNotReset()
+    public function testUnknownResetKeyDoesNotReset(): void
     {
         $library = new ConfigurableCodeLibrary('{number}-{unknown}', '-', 4, '{unknown}');
         $manager = $this->createManager($library);
@@ -87,7 +88,7 @@ class CodeManagerResetTest extends TestCase
         $this->assertEquals('0002-{unknown}', $manager->generate(new ClientTest())->getGeneratedCode());
     }
 
-    public function testLastCodeNotMatchingFormatContinuesSequence()
+    public function testLastCodeNotMatchingFormatContinuesSequence(): void
     {
         $client = (new ClientTest())->setTest('A');
         $library = new ConfigurableCodeLibrary('{number}-{test}', '-', 4, '{test}');
@@ -96,7 +97,7 @@ class CodeManagerResetTest extends TestCase
         $this->assertEquals('0006-A', $this->createManager($library)->generate($client)->getGeneratedCode());
     }
 
-    public function testResetKeyNotInFormat()
+    public function testResetKeyNotInFormat(): void
     {
         $library = new ConfigurableCodeLibrary('{number}-{YYYY}', '-', 4, '{test}');
 
@@ -105,7 +106,7 @@ class CodeManagerResetTest extends TestCase
         $this->createManager($library)->generate(new ClientTest());
     }
 
-    public function testNotSupportedResetKey()
+    public function testNotSupportedResetKey(): void
     {
         $library = new ConfigurableCodeLibrary('{number}-{YYYY}', '-', 4, 'YYYY');
 

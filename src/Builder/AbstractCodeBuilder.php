@@ -18,10 +18,8 @@ abstract class AbstractCodeBuilder implements CodeBuilderInterface
 {
     /**
      * Library of code
-     * 
-     * @return array
      */
-    public function getLibrary():array
+    public function getLibrary(): array
     {
         return [
             'd' => date('d'),
@@ -33,21 +31,21 @@ abstract class AbstractCodeBuilder implements CodeBuilderInterface
             'HH' => date('H'),
             'ii' => date('i'),
             'ss' => date('s'),
-            'rand' => rand()
+            'rand' => random_int(0, mt_getrandmax()),
         ];
     }
-    
-    public function getFormatValue(string $format):?string
+
+    public function getFormatValue(string $format): ?string
     {
         return str_replace(self::BRACE_END, '', str_replace(self::BRACE_START, '', $format));
     }
-    
-    public function isSupported(string $value):bool
+
+    public function isSupported(string $value): bool
     {
         return preg_match('/^' . self::BRACE_START . '/', $value) and preg_match('/' . self::BRACE_END . '/', $value);
     }
-    
-    protected function separateFormat(string $format, string $separator):array
+
+    protected function separateFormat(string $format, string $separator): array
     {
         return explode($separator, $format);
     }

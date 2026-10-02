@@ -8,8 +8,8 @@
 
 namespace Kematjaya\CodeManager\Exception;
 
-use Kematjaya\CodeManager\Entity\CodeLibraryClientInterface;
 use Exception;
+use Kematjaya\CodeManager\Entity\CodeLibraryClientInterface;
 
 /**
  * Description of CodeLibraryNotFoundException
@@ -19,11 +19,11 @@ use Exception;
  */
 class CodeLibraryNotFoundException extends Exception
 {
-    public function __construct(CodeLibraryClientInterface $client) 
+    public function __construct(CodeLibraryClientInterface $client)
     {
-        
-        $message = sprintf("code library for class %s not found", get_class($client));
-        
+
+        $message = sprintf("code library for class %s not found", $client::class);
+
         parent::__construct($message);
     }
 }
