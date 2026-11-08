@@ -1,10 +1,6 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+declare(strict_types=1);
 
 namespace Kematjaya\CodeManager\Entity;
 
@@ -16,5 +12,5 @@ namespace Kematjaya\CodeManager\Entity;
  */
 interface CodeLibraryResetInterface extends CodeLibraryInterface
 {
-    public function getResetKey():?string;
+    public function getResetKey(): ?string;
 }

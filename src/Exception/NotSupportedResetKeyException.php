@@ -1,16 +1,13 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+declare(strict_types=1);
 
 namespace Kematjaya\CodeManager\Exception;
 
 use Exception;
-use Kematjaya\CodeManager\Entity\CodeLibraryResetInterface;
 use Kematjaya\CodeManager\Builder\CodeBuilderInterface;
+use Kematjaya\CodeManager\Entity\CodeLibraryResetInterface;
+
 /**
  * Description of NullResetKeyException
  *
@@ -21,7 +18,13 @@ class NotSupportedResetKeyException extends Exception
 {
     public function __construct(CodeLibraryResetInterface $class)
     {
-        $message = sprintf("reset key  format not supported for class: %s, use %s%s%s", get_class($class), CodeBuilderInterface::BRACE_START, 'key', CodeBuilderInterface::BRACE_END);
+        $message = sprintf(
+            'reset key  format not supported for class: %s, use %s%s%s',
+            get_class($class),
+            CodeBuilderInterface::BRACE_START,
+            'key',
+            CodeBuilderInterface::BRACE_END
+        );
         parent::__construct($message);
     }
 }

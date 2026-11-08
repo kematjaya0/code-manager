@@ -1,20 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Kematjaya\CodeManager\Tests\Exception;
 
-use PHPUnit\Framework\TestCase;
-use Kematjaya\CodeManager\Exception\NotSupportedResetKeyException;
+use Exception;
 use Kematjaya\CodeManager\Entity\CodeLibraryResetInterface;
+use Kematjaya\CodeManager\Exception\NotSupportedResetKeyException;
+use PHPUnit\Framework\TestCase;
 
 class NotSupportedResetKeyExceptionTest extends TestCase
 {
-    public function testExceptionMessage()
+    public function testExceptionMessage(): void
     {
         $class = $this->createMock(CodeLibraryResetInterface::class);
 
         $exception = new NotSupportedResetKeyException($class);
 
-        $this->assertInstanceOf(\Exception::class, $exception);
+        $this->assertInstanceOf(Exception::class, $exception);
         $this->assertStringContainsString('reset key  format not supported for class:', $exception->getMessage());
         $this->assertStringContainsString(get_class($class), $exception->getMessage());
         $this->assertStringContainsString('{key}', $exception->getMessage());

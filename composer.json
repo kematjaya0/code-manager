@@ -2,16 +2,22 @@
     "name": "kematjaya/code-manager",
     "type": "library",
     "license": "MIT",
+    "description": "Code Manager Library for PHP",
     "authors": [
         {
             "name": "Nur Hidayatullah",
             "email": "kematjaya0@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "php": ">=8.4"
+    },
     "require-dev": {
-        "symfony/var-dumper": "^4.0|^5.0",
-        "phpunit/phpunit": "^9.0"
+        "symfony/var-dumper": "^6.0|^7.0",
+        "phpunit/phpunit": "^9.0",
+        "friendsofphp/php-cs-fixer": "^3.95",
+        "squizlabs/php_codesniffer": "^4.0",
+        "phpstan/phpstan": "^2.3"
     },
     "autoload": {
         "psr-4": {
@@ -22,5 +28,12 @@
         "psr-4": {
             "Kematjaya\\CodeManager\\Tests\\": "tests/"
         }
+    },
+    "scripts": {
+        "test": "php -dextension=/tmp/pcov/modules/pcov.so vendor/bin/phpunit --coverage-text",
+        "phpcs": "vendor/bin/phpcs --standard=PSR12 src tests",
+        "cs-check": "vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "cs-fix": "vendor/bin/php-cs-fixer fix",
+        "phpstan": "vendor/bin/phpstan analyse"
     }
 }

@@ -1,10 +1,6 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+declare(strict_types=1);
 
 namespace Kematjaya\CodeManager\Builder;
 
@@ -18,37 +14,44 @@ abstract class AbstractCodeBuilder implements CodeBuilderInterface
 {
     /**
      * Library of code
-     * 
-     * @return array
+     *
+     * @return array<string, mixed>
      */
-    public function getLibrary():array
+    public function getLibrary(): array
     {
         return [
             'd' => date('d'),
             'm' => date('m'),
-            'DD' => date("D"),
-            'MM' => date("M"),
-            'YYYY' => date("Y"),
+            'DD' => date('D'),
+            'MM' => date('M'),
+            'YYYY' => date('Y'),
             'YY' => date('y'),
             'HH' => date('H'),
             'ii' => date('i'),
             'ss' => date('s'),
-            'rand' => rand()
+            'rand' => rand(),
         ];
     }
-    
-    public function getFormatValue(string $format):?string
+
+    public function getFormatValue(string $format): ?string
     {
         return str_replace(self::BRACE_END, '', str_replace(self::BRACE_START, '', $format));
     }
-    
-    public function isSupported(string $value):bool
+
+    public function isSupported(string $value): bool
     {
-        return preg_match('/^' . self::BRACE_START . '/', $value) and preg_match('/' . self::BRACE_END . '/', $value);
+        return str_starts_with($value, self::BRACE_START) && str_ends_with($value, self::BRACE_END);
     }
-    
-    protected function separateFormat(string $format, string $separator):array
+
+    /**
+     * @return list<string>
+     */
+    protected function separateFormat(string $format, string $separator): array
     {
+        if ($separator === '') {
+            return [$format];
+        }
+
         return explode($separator, $format);
     }
 }
